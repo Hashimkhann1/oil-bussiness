@@ -26,6 +26,12 @@ export 'package:oil_bussiness/view/admin_view/admin_home_view/admin_home_view.da
 export 'package:oil_bussiness/view/admin_view/admin_profile_view/admin_profile_view.dart';
 export 'package:oil_bussiness/view_model/bloc/user_data_bloc/user_data_bloc/user_data_bloc.dart';
 export 'package:oil_bussiness/view_model/bloc/user_data_bloc/user_data_bloc_state/user_data_bloc_state.dart';
+export 'package:oil_bussiness/view_model/bloc/user_data_bloc/user_data_bloc_event/user_data_bloc_event.dart';
+export 'package:oil_bussiness/view_model/bloc/loading_bloc/loading_bloc_event/loading_bloc_event.dart';
+export 'package:oil_bussiness/view/markiting_view/marketer_add_customer_view/marketer_add_customer_view.dart';
+export 'package:oil_bussiness/view/markiting_view/marketer_profile_view/marketer_profile_view.dart';
+export 'package:oil_bussiness/res/dummy/dummy.dart';
+
 
 
 export 'package:firebase_auth/firebase_auth.dart';

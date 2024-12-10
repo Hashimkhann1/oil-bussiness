@@ -5,6 +5,7 @@ class AppTextField extends StatelessWidget {
 
   const AppTextField({
     required this.hintText,
+    this.labelText,
     this.controller,
     this.validator,
     this.keyboardType,
@@ -22,6 +23,7 @@ class AppTextField extends StatelessWidget {
 
 
   final String hintText;
+  final String? labelText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
@@ -56,6 +58,11 @@ class AppTextField extends StatelessWidget {
         ),
         decoration: InputDecoration(
           hintText: hintText,
+          labelText: labelText,
+          labelStyle: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: fontSize,
+          ),
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
         ),

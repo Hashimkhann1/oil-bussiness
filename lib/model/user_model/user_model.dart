@@ -4,6 +4,8 @@ class UserModel {
   String? userId;
   String? userEmail;
   String? accountRole;
+  String? phoneNumber;
+  String? adminId;
   DateTime? createdData;
 
   UserModel({this.userId, this.userEmail, this.accountRole, this.createdData});
@@ -12,6 +14,8 @@ class UserModel {
     userId = json['userId'];
     userEmail = json['userEmail'];
     accountRole = json['accountRole'];
+    phoneNumber = json['phoneNumber'];
+    adminId = json['adminId'];
     createdData = (json['createdData'] as Timestamp).toDate();
   }
 
@@ -20,6 +24,8 @@ class UserModel {
     data['userId'] = this.userId;
     data['userEmail'] = this.userEmail;
     data['accountRole'] = this.accountRole;
+    data['phoneNumber'] = this.phoneNumber;
+    data['adminId'] = this.adminId;
     data['createdData'] = this.createdData;
     return data;
   }
