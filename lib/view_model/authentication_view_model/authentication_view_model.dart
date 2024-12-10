@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:oil_bussiness/view/initial_user_view/initial_user_view.dart';
-
 import '../../res/paths/paths.dart';
 export 'package:flutter/foundation.dart';
-export '../bloc/loading_bloc/loading_bloc_event/loading_bloc_event.dart';
 
 
 
@@ -11,6 +8,7 @@ class AuthenticationViewModel {
 
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance.collection('users');
+  final GetUserDataViewModel getUserDataViewModel = GetUserDataViewModel();
 
 
   Future addInitialUserData(BuildContext context, String id , email) async {
@@ -33,16 +31,17 @@ class AuthenticationViewModel {
 
   /// sign in method
   Future<void> signIn(BuildContext context , String email , password) async {
-    context.read<LoadingBloc>().add(SetLoading());
+    final loadingBloc = context.read<LoadingBloc>();
     try{
+      loadingBloc.add(SetLoading());
       await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
         // Utils.toastMessage("User Sign in successfully");
-
-        context.read<LoadingBloc>().add(SetLoading());
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => SaleInvoiceView()));
+        getUserDataViewModel.getuserData(context);
+        loadingBloc.add(SetLoading());
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavView()));
       });
     }on FirebaseAuthException catch(error){
-      context.read<LoadingBloc>().add(SetLoading());
+      loadingBloc.add(SetLoading());
       if(kDebugMode){
         print("Error while signing up from AuthViewModel >>>>>>> ${error.message} >>>>");
       }
@@ -51,19 +50,18 @@ class AuthenticationViewModel {
 
   // sign Up method
   Future<void> signUp(BuildContext context , email , password) async {
+      final loadingBloc = context.read<LoadingBloc>();
     try{
-      context.read<LoadingBloc>().add(SetLoading());
+      loadingBloc.add(SetLoading());
 
       await _auth.createUserWithEmailAndPassword(email: email, password: password).then((value) async {
         await addInitialUserData(context , value.user!.uid.toString() , email );
         // Utils.toastMessage("User Sign up successfully");
-        print("Sign Up");
-        context.read<LoadingBloc>().add(SetLoading());
-
+        loadingBloc.add(SetLoading());
         Navigator.push(context, MaterialPageRoute(builder: (context) => InitialUserView()));
       });
     }on FirebaseAuthException catch(error){
-      context.read<LoadingBloc>().add(SetLoading());
+      loadingBloc.add(SetLoading());
 
       // Utils.toastMessage(error.code);
       if(kDebugMode){
@@ -78,6 +76,7 @@ class AuthenticationViewModel {
     try{
       await _auth.signOut().then((value) {
         // Utils.toastMessage("User Sign out Successfully");
+        context.read<UserDataBloc>().add(ClearUserData());
         Navigator.push(context, MaterialPageRoute(builder: (context) => LoginView()));
       });
     }on FirebaseAuthException catch(error) {
