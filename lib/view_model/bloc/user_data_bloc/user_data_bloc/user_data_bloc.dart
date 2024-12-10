@@ -12,12 +12,19 @@ class UserDataBloc extends Bloc<UserDataBlocEvent , UserDataBlocState> {
 
   UserDataBloc() : super(UserDataBlocState()) {
     on<GetUserData>(_getUserData);
+    on<ClearUserData>(_clearUserData);
   }
 
 
+  // Get User data
   void _getUserData(GetUserData event , Emitter<UserDataBlocState> emit) {
-    print(event.userModel);
     userDataList.add(event.userModel);
+    emit(state.copyWith(userDataist: List.from(userDataList)));
+  }
+
+  // Clear user data
+  void _clearUserData(ClearUserData event , Emitter<UserDataBlocState> emit) {
+    userDataList.clear();
     emit(state.copyWith(userDataist: List.from(userDataList)));
   }
 

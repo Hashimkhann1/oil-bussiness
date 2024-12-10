@@ -17,3 +17,5 @@ class GetUserData extends UserDataBlocEvent {
   GetUserData({required this.userModel});
 
 }
+
+class ClearUserData extends UserDataBlocEvent {}
