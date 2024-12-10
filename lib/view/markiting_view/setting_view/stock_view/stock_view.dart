@@ -52,100 +52,50 @@ class StockView extends StatelessWidget {
                       ],
                     ),
                   );
-                }else if(data.hasError) {
+                }
+
+                if (!data.hasData || !data.data!.exists) {
                   return SizedBox(
-                    height: height * 0.07,
-                    child: Column(
-                      children: [CircularProgressIndicator(color: Colors.red,)],
+                    height: height * 0.7,
+                    child: Center(
+                      child: MyText(
+                        title: "No Stock Data Available",
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primaryColor,
+                      ),
                     ),
                   );
                 }
 
-                return  Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                            color: AppColor.primaryColor.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 10)
-                      ]),
-                  child: Column(
-                    children: [
+                if (data.hasError) {
+                  return SizedBox(
+                    height: height * 0.07,
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(color: Colors.red),
+                      ],
+                    ),
+                  );
+                }
 
-                      // // Product
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MyText(title: "Product",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //     MyText(title: data.data!["product"],fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //   ],
-                      // ),
-                      //
-                      // // Total Liters
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MyText(title: "Total Liters",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //     MyText(title: data.data!.docs[index]["totalLiters"],fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //   ],
-                      // ),
-                      //
-                      // // Purchase Price
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MyText(title: "Purchase Price Per Liter",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //     MyText(title: data.data!.docs[index]['purchasePricePerLiter'],fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //   ],
-                      // ),
-                      //
-                      // // Sale Price
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MyText(title: "Sale Price Per Liter",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //     MyText(title: data.data!.docs[index]['salePricePerLiter'],fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //   ],
-                      // ),
-                      //
-                      // // Total price
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MyText(title: "Total Price",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //     MyText(title: data.data!.docs[index]['totalPrice'].toString() ,fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                      //   ],
-                      // ),
 
-                      // Product Name
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MyText(title: "Product",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                          MyText(title: "Petrol" ,fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MyText(title: "Liters",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                          MyText(title: data.data!['petrolStock'].toString() ,fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MyText(title: "Sale Price",fontSize: 17,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                          MyText(title: data.data!['petrolSalePricePerLiter'].toString() ,fontSize: 19,fontWeight: FontWeight.bold,color: AppColor.primaryColor,),
-                        ],
-                      ),
+                final stockData = data.data!.data() as Map<String, dynamic>;
+                return Column(
+                  children: [
 
-                    ],
-                  ),
+                    buildStockCard(
+                      title: "Petrol",
+                      liters: stockData['petrolStock'] == null ? '0' : stockData['petrolStock'].toString(),
+                      salePrice: stockData['petrolSalePricePerLiter'] == null ? '0' : stockData['petrolSalePricePerLiter'].toString(),
+                    ),
+                    buildStockCard(
+                      title: "Diesel",
+                      liters: stockData['dieselStock'] == null ? '0' : stockData['dieselStock'].toString(),
+                      salePrice: stockData['dieselSalePricePerLiter'] == null ? '0' : stockData['dieselSalePricePerLiter'].toString(),
+                    ),
+
+                  ],
                 );
 
                   // return Expanded(
@@ -162,4 +112,77 @@ class StockView extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildStockCard({required String title, required String liters, required String salePrice}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    decoration: BoxDecoration(
+      color: AppColor.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: AppColor.primaryColor.withOpacity(0.3),
+          spreadRadius: 2,
+          blurRadius: 10,
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MyText(
+              title: "Product",
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+            MyText(
+              title: title,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MyText(
+              title: "Liters",
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+            MyText(
+              title: liters,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MyText(
+              title: "Sale Price",
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+            MyText(
+              title: salePrice,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              color: AppColor.primaryColor,
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }
